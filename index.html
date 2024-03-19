@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPFSQuery</title>
+    <style>
+      body {
+        padding-bottom: 50px;
+      }
+      fieldset {
+        margin: 1em;
+        background-color: #eeeeee;
+      }
+
+      legend {
+        background-color: #286bd7;
+        color: white;
+        padding: 5px 10px;
+      }
+
+      .code-block {
+        margin: 5px 0;
+        background: #fff;
+      }
+
+      code {
+        white-space: pre;
+      }
+
+      input {
+        margin: 5px;
+      }
+
+      .quick-action {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px 50px;
+        background-color: #fff;
+        border-top: 1px solid #eeeeee;
+        box-shadow: 0px 0px 10px 2px #555;
+      }
+      .github-link {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        padding: 10px;
+        background: #fff;
+      }
+    </style>
+    <script type="module">
+      import createOPFSQuery, { OPFSQuery } from "./OPFSQuery.js"
+      window.opfs = createOPFSQuery();
+      window.OPFSQuery = OPFSQuery;
+    </script>
+  </head>
+  <body>
+
+    <h1>OPFSQuery</h1>
+    <a href="https://github.com/badges/shields" target="_blank" rel="noopener noreferrer" class="github-link">GitHub <svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a>
+
+    <div class="quick-action">
+      <span>快速操作：</span>
+      <input type="button" value="log" onclick="(async () => {
+        console.log('当前目录：', await opfs.current);
+        console.log('工作路径：', await opfs.workingDirectory);
+      })()" />
+      <input type="button" value="ls" onclick="(() => {
+        opfs.ls().then((entries) => {
+          console.log(entries);
+        });
+      })()" />
+      <input type="button" value="reset" onclick="(() => {
+        console.log(opfs.reset());
+      })()" />
+    </div>
+
+    <div>点击执行按钮后打开控制台以查看执行结果；</div>
+    <div>或手动复制代码到控制台修改并执行。</div>
+
+    <fieldset>
+      <legend>创建一个新的查询</legend>
+      <div class="code-block">
+        <code>
+          var opfs = createOPFSQuery();
+          console.log(opfs);
+        </code>
+      </div>
+      <div>
+        返回一个关联当前目录的实例对象。
+      </div>
+      <input type="button" value="执行 createOPFSQuery" onclick="(() => {
+        var opfs = createOPFSQuery();
+        console.log(opfs);
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>获取当前目录及工作路径</legend>
+      <div class="code-block">
+        <code>
+          console.log('当前目录：', await opfs.current);
+          console.log('工作路径：', await opfs.workingDirectory);
+        </code>
+      </div>
+      <input type="button" value="执行" onclick="(async () => {
+        console.log('当前目录：', await opfs.current);
+        console.log('工作路径：', await opfs.workingDirectory);
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>重置当前目录到根目录</legend>
+      <div class="code-block">
+        <code>
+          console.log(opfs.reset());
+        </code>
+      </div>
+      <div>当出现异常报错时可尝试进行重置操作。</div>
+      <input type="button" value="执行 reset" onclick="(() => {
+        console.log(opfs.reset());
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>列出当前目录下的文件和文件夹</legend>
+      <div class="code-block">
+        <code>
+          opfs.ls().then((entries) => {
+            console.log(entries);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 ls" onclick="(() => {
+        opfs.ls().then((entries) => {
+          console.log(entries);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>以指定目录为根目录，获取整个目录树</legend>
+      <div class="code-block">
+        <code>
+          opfs.tree().then((tree) => {
+            console.log(tree);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 tree" onclick="(() => {
+        opfs.tree().then((tree) => {
+          console.log(tree);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>创建新目录</legend>
+      <div class="code-block">
+        <code>
+          opfs.createDirectory('directory').then((directoryHandle) => {
+            console.log(directoryHandle);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 createDirectory" onclick="(() => {
+        opfs.createDirectory('directory').then((directoryHandle) => {
+          console.log(directoryHandle);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>切换当前目录</legend>
+      <div class="code-block">
+        <code>
+          opfs.cd('/directory', { create: true }).then((directoryHandle) => {
+            console.log(directoryHandle);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 cd" onclick="(() => {
+        opfs.cd('/directory').then((directoryHandle) => {
+          console.log(directoryHandle);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>在当前目录下创建新文件</legend>
+      <div class="code-block">
+        <code>
+          opfs.createFile('file.txt').then((fileHandle) => {
+            console.log(fileHandle);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 createFile" onclick="(() => {
+        opfs.createFile('file.txt').then((fileHandle) => {
+          console.log(fileHandle);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>获取当前目录下指定的文件关联句柄</legend>
+      <div class="code-block">
+        <code>
+          opfs.getFileHandle('file.txt').then((fileHandle) => {
+            console.log(fileHandle);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 getFileHandle" onclick="(() => {
+        opfs.getFileHandle('file.txt').then((fileHandle) => {
+          console.log(fileHandle);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>获取当前目录下指定文件的 Blob 对象</legend>
+      <div class="code-block">
+        <code>
+          opfs.getFileBlob('file.txt').then((fileBlob) => {
+            console.log(fileBlob);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 getFileBlob" onclick="(() => {
+        opfs.getFileBlob('file.txt').then((fileBlob) => {
+          console.log(fileBlob);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>获取当前目录下指定文件的大小</legend>
+      <div class="code-block">
+        <code>
+          opfs.getFileSize('file.txt').then((size) => {
+            console.log('file.txt size:', size);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 getFileSize" onclick="(() => {
+        opfs.getFileSize('file.txt').then((size) => {
+          console.log('file.txt size:', size);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>下载当前目录树到本地磁盘</legend>
+      <div class="code-block">
+        <code>
+          opfs.downloadDirectory().then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 downloadDirectory" onclick="(() => {
+        opfs.downloadDirectory().then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>下载当前目录下指定文件到本地磁盘</legend>
+      <div class="code-block">
+        <code>
+          opfs.downloadFile('file.txt').then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 downloadFile" onclick="(() => {
+        opfs.downloadFile('file.txt').then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>重命名当前目录下指定文件</legend>
+      <div class="code-block">
+        <code>
+          opfs.rename('file.txt', 'tmp.txt').then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 rename" onclick="(() => {
+        opfs.rename('file.txt', 'tmp.txt').then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>删除当前目录下指定文件</legend>
+      <div class="code-block">
+        <code>
+          opfs.remove('tmp.txt').then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 remove 文件" onclick="(() => {
+        opfs.remove('tmp.txt').then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>删除当前目录下指定文件夹</legend>
+      <div class="code-block">
+        <code>
+          opfs.remove('directory', { recursive: true }).then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 remove 文件夹" onclick="(() => {
+        opfs.remove('directory', { recursive: true }).then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>删除当前目录自身</legend>
+      <div class="code-block">
+        <code>
+          opfs.removeSelf({ recursive: true }).then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <div>删除成功后返回到根目录</div>
+      <input type="button" value="执行 removeSelf" onclick="(() => {
+        opfs.removeSelf({ recursive: true }).then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>通过流式写入修改文件</legend>
+      <div class="code-block">
+        <code>
+          opfs.writeFileStream('file.txt', 'some text').then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <div>写入的数据可以是 ArrayBuffer、TypedArray、DataView、Blob 或字符串形式</div>
+      <input type="button" value="执行 writeFileStream" onclick="(() => {
+        opfs.writeFileStream('file.txt', 'some text').then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>读取文件内容</legend>
+      <div class="code-block">
+        <code>
+          opfs.getFileBlob('file.txt').then(async (file) => {
+            console.log(await file.text());
+          });
+        </code>
+      </div>
+      <input type="button" value="执行读取文件内容" onclick="(() => {
+        opfs.getFileBlob('file.txt').then(async (file) => {
+          console.log(await file.text());
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>写入 buffer 到文件</legend>
+      <div class="code-block">
+        <code>
+          var content = new TextEncoder().encode('Some data');
+          opfs.writeFile('file.txt', content, { transfer: content.buffer }).then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <div>通过 web worker 同步方法写入数据</div>
+      <input type="button" value="执行 writeFile" onclick="(() => {
+        var content = new TextEncoder().encode('Some data');
+        opfs.writeFile('file.txt', content, { transfer: content.buffer }).then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>读取文件 buffer </legend>
+      <div class="code-block">
+        <code>
+          opfs.readFile('file.txt').then((buffer) => {
+            console.log(buffer);
+            console.log(new TextDecoder().decode(buffer));
+          });
+        </code>
+      </div>
+      <div>通过 web worker 同步方法读取文件数据</div>
+      <input type="button" value="执行 readFile" onclick="(() => {
+        opfs.readFile('file.txt').then((buffer) => {
+          console.log(buffer);
+          console.log(new TextDecoder().decode(buffer));
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>调整文件大小</legend>
+      <div class="code-block">
+        <code>
+          opfs.truncateFile('file.txt', { size: 4 }).then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <div>通过 web worker 同步方法调整文件大小</div>
+      <input type="button" value="执行 truncateFile" onclick="(() => {
+        opfs.truncateFile('file.txt', { size: 4 }).then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+    <fieldset>
+      <legend>查询已用空间</legend>
+      <div class="code-block">
+        <code>
+          import { OPFSQuery } from './OPFSQuery.js'
+          OPFSQuery.usage().then((res) => {
+            console.log(res);
+          });
+        </code>
+      </div>
+      <input type="button" value="执行 OPFSQuery.usage" onclick="(() => {
+        OPFSQuery.usage().then((res) => {
+          console.log(res);
+        });
+      })();" />
+    </fieldset>
+
+  </body>
+</html>
